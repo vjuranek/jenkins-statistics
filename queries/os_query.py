@@ -7,7 +7,7 @@ from collections import Counter
 client = MongoClient('localhost', 27017)
 stats = client.jenkins_stats.jstats
 
-def cnt_aggregate_names(results, key_delim=" ",cnt_key="cnt"):
+def cnt_aggregate_names(results, key_delim=" ", cnt_key="cnt", limit=10):
     items = Counter()
     for res in results:
         item = res["_id"]
@@ -17,7 +17,7 @@ def cnt_aggregate_names(results, key_delim=" ",cnt_key="cnt"):
         items[item] += res[cnt_key]
 
     total = sum(items.values())
-    for item in items.most_common():
+    for item in items.most_common(limit):
         print "%s\t...\t%d" % item + "\t{0:.0f}%".format(float(item[1])/total * 100)
     print "----------------------"
     print "All items:\t%d" % total
@@ -27,13 +27,17 @@ def os_cnt():
     os = os["result"]
     cnt_aggregate_names(os)
 
-# def plugin_cnt():
-#     plugins = stats.aggregate([{"$project":{"_id":"$_id","plugins":"$plugins"}},{"$unwind":"$plugins"},{"$group":{"_id":"$plugins.name", "cnt":{"$sum":1}}},{"$sort":{"cnt":1}}])
-#     plugins = plugins["result"]
+def plugin_cnt(limit=10):
+    plugins = stats.aggregate([{"$project":{"_id":"$_id","plugins":"$plugins"}},{"$unwind":"$plugins"},{"$group":{"_id":"$plugins.name", "cnt":{"$sum":1}}},{"$sort":{"cnt":-1}},{"$limit":limit}])
+    plugins = plugins["result"]
+    cnt_aggregate_names(plugins)
 
-# def container_cnt():
-#     containers = stats.aggregate([{"$group":{"_id":"$servletContainer", "cnt":{"$sum":1}}},{"$sort":{"cnt":1}}])
-#     containers = containers["result"]
+def container_cnt():
+    containers = stats.aggregate([{"$group":{"_id":"$servletContainer", "cnt":{"$sum":1}}},{"$sort":{"cnt":1}}])
+    containers = containers["result"]
+    cnt_aggregate_names(containers, key_delim="/")
 
+#os_cnt
+plugin_cnt()
+#container_cnt()
 
-os_cnt()
