@@ -23,21 +23,21 @@ for os in os_stat:
     print "%s ... %d" % (os, os_stat.get(os))
 
 
-# labels = []
-# values = []
-# for os in os_stat.most_common(4):
-#     labels.append(os)
-#     values.append(os_stat.get(os))
+labels = []
+values = []
+for os in os_stat.most_common(5):
+    labels.append(os[0])
+    values.append(os[1])
 
-# print labels
-# print values
+print labels
+print values
 
-# colors = ['green', 'gold', 'lightskyblue', 'red']
-# explode = (0.05, 0.05, 0.05, 0.05) 
+colors = ['green', 'gold', 'lightskyblue', 'red', 'blue']
+explode = (0.05, 0.05, 0.05, 0.05, 0.05) 
 
-# plt.pie(values, labels=labels, explode=explode, colors=colors,
-#         autopct='%1.1f%%', shadow=True, startangle=90)
-# # Set aspect ratio to be equal so that pie is drawn as a circle.
-# plt.axis('equal')
-# plt.savefig("../eps/os.eps")
+plt.pie(values, labels=labels, explode=explode, colors=colors,
+        autopct='%1.1f%%', shadow=True, startangle=90)
+# Set aspect ratio to be equal so that pie is drawn as a circle.
+plt.axis('equal')
+plt.savefig("../eps/os.eps")
 
