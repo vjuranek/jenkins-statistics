@@ -11,15 +11,16 @@ results = results["result"]
 
 labels = []
 values = []
+explode = []
+EXPLODE_VAL = 0.05
 for res in results:
     labels.append(res["_id"])
     values.append(res["cnt"])
+    explode.append(EXPLODE_VAL)
 colors = ['green', 'gold', 'lightskyblue', 'red']
-explode = (0.05, 0.05, 0.05, 0.05) 
 
 plt.pie(values, labels=labels, explode=explode, colors=colors,
         autopct='%1.1f%%', shadow=True, startangle=90)
-# Set aspect ratio to be equal so that pie is drawn as a circle.
 plt.axis('equal')
 plt.savefig("../eps/jvm_version.eps")
 
