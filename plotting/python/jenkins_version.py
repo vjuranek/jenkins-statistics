@@ -9,7 +9,10 @@ results = stats.find({},{"version":1})
 
 versions = []
 for res in results:
-    versions.append(int(res["version"][2:5]))
+    try:
+        versions.append(int(res["version"][2:5]))
+    except ValueError:
+        pass #no-op
 
 n, bins, patches = plt.hist(versions, 50, normed=0, histtype='step')
 plt.xlabel('Jenkins version')
